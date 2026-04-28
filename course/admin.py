@@ -1,9 +1,6 @@
 from django.contrib import admin
-from .models import Question, Choice, Submission
+from .models import Course, Lesson, Instructor, Learner, Question, Choice, Submission
 from django.contrib.admin import TabularInline, ModelAdmin
-from django.utils.html import format_html
-from django.urls import reverse
-from django.utils.safestring import mark_safe
 
 
 class ChoiceInline(TabularInline):
@@ -16,15 +13,27 @@ class QuestionInline(TabularInline):
     extra = 1
 
 
-class QuestionAdmin(ModelAdmin):
-    list_display = ('question_text',)
-    inlines = [ChoiceInline]
+class LessonInline(TabularInline):
+    model = Lesson
+    extra = 1
+
+
+class CourseAdmin(ModelAdmin):
+    inlines = [LessonInline]
 
 
 class LessonAdmin(ModelAdmin):
-    list_display = ('id',)
+    inlines = [QuestionInline]
 
 
+class QuestionAdmin(ModelAdmin):
+    inlines = [ChoiceInline]
+
+
+admin.site.register(Course, CourseAdmin)
+admin.site.register(Lesson, LessonAdmin)
+admin.site.register(Instructor)
+admin.site.register(Learner)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Choice)
 admin.site.register(Submission)
